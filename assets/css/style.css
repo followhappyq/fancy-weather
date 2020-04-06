@@ -1,12 +1,106 @@
 * {
   padding: 0;
-  bottom: 0;
+  margin: 0;
   box-sizing: border-box;
 }
-
-body {
-  height: 100%;
-  width: auto;
-  background-image: url();
-  background-size: cover;
+html {
+  min-height: 100%;
+  margin: 0px;
 }
+body {
+  min-height: 100%;
+  width: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3)),
+    url("../img/background/image.jfif");
+
+  font-family: "Montserrat", sans-serif;
+}
+/* Header START */
+.header-container {
+  display: flex;
+  flex-direction: row;
+  height: 45px;
+  width: 80%;
+  width: auto;
+  justify-content: space-around;
+  margin-top: 40px;
+  color: white;
+  font-size: 18px;
+}
+
+.header-menu {
+  display: flex;
+  width: 60%;
+}
+
+.temperature-description,
+.refresh-image,
+.locales {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(174, 181, 185, 0.5);
+  border-radius: 5px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.header-menu .locales {
+  min-width: 70px;
+}
+
+.header-menu .locales select {
+  background-color: rgba(174, 181, 185, 0.5);
+  border: none;
+}
+
+.voice-recognition {
+  display: flex;
+  position: relative;
+}
+
+.search-field .talk {
+  background: url(../img/icon/mic.svg) center no-repeat;
+  height: 18px;
+  width: 18px;
+  border: none;
+  position: absolute;
+  left: 60%;
+  top: 30%;
+}
+
+.voice-recognition .search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: rgba(174, 181, 185, 0.5);
+  margin: 0;
+  padding: 0px;
+  height: 45px;
+  width: 120px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 0 10px 10px 0;
+}
+
+.search-field input[type="text"] {
+  height: 45px;
+  width: 250px;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  padding-left: 20px;
+  border-radius: 10px 0 0 10px;
+  border: 0.5px solid grey;
+}
+
+.search-field input[type="text"]::placeholder {
+  color: white;
+}
+
+/* HEADER END */
