@@ -15,8 +15,14 @@ const searchButton = document.querySelector(".voice-recognition .search");
 
 /** Weather DOM elements  START*/
 
-const temperatureDescription = document.querySelector(".weather-description");
 const temperatureDegree = document.querySelector(".weather-degree");
+const weatherCity = document.querySelector(".information-container .city");
+const time = document.querySelector(".information-container .time");
+const summaryInfo = document.querySelector(".information-container .summary");
+const feels = document.querySelector(".information-container .feels");
+const wind = document.querySelector(".information-container .wind");
+const humi = document.querySelector(".information-container .humidity");
+
 /** Weather DOM elements  END*/
 
 /** DOM elements END */
@@ -62,27 +68,14 @@ const saveRecognitionToInput = (transcript) => {
 /**Weather API START https://darksky.net/dev/docs*/
 
 window.addEventListener("load", () => {
-  let long;
-  let lat;
-
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position) => {
-      long = position.coords.longitude;
-      lat = position.coords.latitude;
-
-      const proxy = `https://cors-anywhere.herokuapp.com/`;
-      const api = `${proxy}https://api.darksky.net/forecast/a0649363ce478d7e542996beff8f43c7/${lat},${long}?lang=${currentInfo.currentLocale}`;
-      fetch(api)
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          const { temperature, summary } = data.currently;
-          //DOM elements
-          temperatureDegree.textContent = `${Math.floor(temperature)} °F`;
-          temperatureDescription.textContent = summary;
-          console.log(data);
-        });
+      const cityInfo = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+      getCityWeather(cityInfo);
+      getCityInfoByCoordinate(cityInfo);
     });
   } else {
     console.log(1);
@@ -91,18 +84,26 @@ window.addEventListener("load", () => {
 
 async function getCityWeather(cityInfo) {
   const proxy = `https://cors-anywhere.herokuapp.com/`;
-  const api = `${proxy}https://api.darksky.net/forecast/a0649363ce478d7e542996beff8f43c7/${currentInfo.currentCoordinate.lat},${currentInfo.currentCoordinate.lng}?lang=${currentInfo.currentLocale}`;
+  const api = `${proxy}https://api.darksky.net/forecast/a0649363ce478d7e542996beff8f43c7/${cityInfo.lat},${cityInfo.lng}?lang=${currentLocale}`;
   fetch(api)
     .then((response) => {
       return response.json();
     })
     .then((data) => {
-      const { temperature, summary } = data.currently;
+      console.log(data);
+      const {
+        temperature,
+        summary,
+        windSpeed,
+        humidity,
+        apparentTemperature,
+      } = data.currently;
       const { daily } = data;
-      currentInfo.weatherInfo.temperature = temperature;
-      currentInfo.weatherInfo.summary = summary;
-      currentInfo.currentTimeZone = data.timezone;
-      console.log(daily);
+      temperatureDegree.textContent = `${Math.floor(temperature)} °F`;
+      summaryInfo.textContent = summary;
+      feels.textContent = `Feels Like: ${Math.floor(apparentTemperature)}`;
+      wind.textContent = `Wind speed: ${Math.floor(windSpeed)} km/h`;
+      humi.textContent = `Humidity: ${humidity * 100} %`;
     });
 }
 
@@ -111,28 +112,55 @@ async function getCityWeather(cityInfo) {
 /** Opencage API START  https://opencagedata.com/api*/
 // const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${long}&key=a7bc7920be7b4e7fa5fefa29178826b4&language=PL`;
 
-async function getCityInfo(city) {
-  const url = `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=a7bc7920be7b4e7fa5fefa29178826b4&language=${
-    locales.opencageLocal[currentInfo.currentLocale]
-  }`;
-  let info;
+async function getCityInfoByName(city) {
+  const url = `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${properties.opencage}&language=${locales.opencageLocal[currentLocale]}`;
   fetch(url)
     .then((response) => {
       return response.json();
     })
     .then((data) => {
-      info = data.results[0];
-      /**change state in properties.js */
-      currentInfo.currentCoordinate = data.results[0].geometry;
-      currentInfo.currentCity = data.results[0].formatted;
-      console.log(data.results[0]);
+      const { timezone } = data.results[0].annotations;
+      /**Add data to PAGE */
+      weatherCity.textContent = data.results[0].formatted;
+      time.textContent = `${new Date().toLocaleDateString("en-GB", {
+        timeZone: timezone.name,
+        dateStyle: "full",
+      })}
+        ${new Date().toLocaleTimeString("en-GB", {
+          timeZone: timezone.name,
+          hour: "numeric",
+          minute: "numeric",
+        })}`;
+
+      getCityWeather(data.results[0].geometry);
     });
-  return info;
+}
+
+async function getCityInfoByCoordinate(cityInfo) {
+  const url = `https://api.opencagedata.com/geocode/v1/json?q=${cityInfo.lat}+${cityInfo.lng}&key=${properties.opencage}&language=${locales.opencageLocal[currentLocale]}`;
+  fetch(url)
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      const { timezone } = data.results[0].annotations;
+      const { city, country } = data.results[0].components;
+      /**Add data to PAGE */
+      weatherCity.textContent = `${city}, ${country}`;
+      time.textContent = `${new Date().toLocaleDateString("en-GB", {
+        timeZone: timezone.name,
+        dateStyle: "full",
+      })}
+        ${new Date().toLocaleTimeString("en-GB", {
+          timeZone: timezone.name,
+          hour: "numeric",
+          minute: "numeric",
+        })}`;
+    });
 }
 
 function addInformationOnPage() {
-  getCityInfo(searchField.value == "" ? "Minsk" : searchField.value);
-  getCityWeather();
+  getCityInfoByName(searchField.value == "" ? "Minsk" : searchField.value);
 }
 
 /**Opencage API END */

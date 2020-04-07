@@ -37,6 +37,7 @@
               value=""
               class="result"
               placeholder="Search city"
+              name="city"
               required
             />
             <button class="talk" type="button"></button>
@@ -48,16 +49,17 @@
     </header>
     <main>
       <div class="information-container">
-        <div class="today-weather city"></div>
+        <div class="city"></div>
         <div class="time"></div>
         <div class="temperature">
           <h2 class="weather-degree"></h2>
-          <div class="weather-description"></div>
         </div>
-      </div>
-
-      <div class="location">
-        <h1 class="location-timezone"></h1>
+        <div class="temperatue-description">
+          <div class="summary"></div>
+          <div class="feels"></div>
+          <div class="wind"></div>
+          <div class="humidity"></div>
+        </div>
       </div>
     </main>
     <footer></footer>

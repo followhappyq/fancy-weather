@@ -1,22 +1,9 @@
 const properties = {
   unsplash: "h016S_7pAl7MHncLE8OtNR6wrBeBv2iS035G8KuCCA4",
-  opencagedata: "a7bc7920be7b4e7fa5fefa29178826b4",
+  opencage: "a7bc7920be7b4e7fa5fefa29178826b4",
 };
 
-let currentCity = "Belarus,Minsk";
-let currentInfo = {
-  currentCity: "Belarus, Minsk",
-  currentCoordinate: {
-    lat: 53.902334,
-    lng: 27.5618791,
-  },
-  currentLocale: "EN",
-  weatherInfo: {
-    currentTemperature: 0,
-    summary: "",
-  },
-  currentTimeZone: "Europe/Minsk",
-};
+let currentLocale = "EN";
 
 const locales = {
   opencageLocal: {
