@@ -4,21 +4,18 @@ const properties = {
 };
 
 let currentLocale = "EN";
+let currentCoordinate = {
+  lng: "",
+  lat: "",
+};
 
 const locales = {
   opencageLocal: {
     EN: "en-us",
-    PL: "pl-l",
+    PL: "pl-pl",
     RU: "ru-ru",
   },
 };
 
 let date = new Date();
 date.setDate(date.getDate() + 1);
-
-console.log(date);
-
-console.log(new Date().toLocaleDateString("pl-PL", { weekday: "long" }));
-console.log(
-  new Date().toLocaleTimeString("en-GB", { timeZone: "Europe/Moscow" })
-);

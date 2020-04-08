@@ -22,6 +22,8 @@ const summaryInfo = document.querySelector(".information-container .summary");
 const feels = document.querySelector(".information-container .feels");
 const wind = document.querySelector(".information-container .wind");
 const humi = document.querySelector(".information-container .humidity");
+const forecastTemp = document.querySelectorAll(".forecast-temperature");
+const forecastDay = document.querySelectorAll(".forecast-day");
 
 /** Weather DOM elements  END*/
 
@@ -55,7 +57,6 @@ recognition.onstart = () => {
 recognition.onresult = (event) => {
   const current = event.resultIndex;
   const transcript = event.results[current][0].transcript;
-  console.log(transcript);
   saveRecognitionToInput(transcript);
 };
 
@@ -90,7 +91,6 @@ async function getCityWeather(cityInfo) {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
       const {
         temperature,
         summary,
@@ -103,8 +103,10 @@ async function getCityWeather(cityInfo) {
       summaryInfo.textContent = summary;
       feels.textContent = `Feels Like: ${Math.floor(apparentTemperature)}`;
       wind.textContent = `Wind speed: ${Math.floor(windSpeed)} km/h`;
-      humi.textContent = `Humidity: ${humidity * 100} %`;
+      humi.textContent = `Humidity: ${Math.floor(humidity * 100)} %`;
+      dailyWeather(daily.data);
     });
+  currentCoordinate = cityInfo;
 }
 
 /** Weather API END */
@@ -119,19 +121,7 @@ async function getCityInfoByName(city) {
       return response.json();
     })
     .then((data) => {
-      const { timezone } = data.results[0].annotations;
-      /**Add data to PAGE */
-      weatherCity.textContent = data.results[0].formatted;
-      time.textContent = `${new Date().toLocaleDateString("en-GB", {
-        timeZone: timezone.name,
-        dateStyle: "full",
-      })}
-        ${new Date().toLocaleTimeString("en-GB", {
-          timeZone: timezone.name,
-          hour: "numeric",
-          minute: "numeric",
-        })}`;
-
+      addInformationAboutCity(data);
       getCityWeather(data.results[0].geometry);
     });
 }
@@ -143,24 +133,58 @@ async function getCityInfoByCoordinate(cityInfo) {
       return response.json();
     })
     .then((data) => {
-      const { timezone } = data.results[0].annotations;
-      const { city, country } = data.results[0].components;
-      /**Add data to PAGE */
-      weatherCity.textContent = `${city}, ${country}`;
-      time.textContent = `${new Date().toLocaleDateString("en-GB", {
-        timeZone: timezone.name,
-        dateStyle: "full",
-      })}
-        ${new Date().toLocaleTimeString("en-GB", {
-          timeZone: timezone.name,
-          hour: "numeric",
-          minute: "numeric",
-        })}`;
+      console.log(data);
+      addInformationAboutCity(data);
     });
 }
 
-function addInformationOnPage() {
-  getCityInfoByName(searchField.value == "" ? "Minsk" : searchField.value);
+function addInformationAboutCity(data) {
+  const { timezone } = data.results[0].annotations;
+  const { city, country } = data.results[0].components;
+  const { formatted } = data.results[0];
+  /**Add data to PAGE */
+  weatherCity.textContent = `${
+    city == undefined ? formatted : city + "," + country
+  }`;
+  time.textContent = `${new Date().toLocaleDateString("en-GB", {
+    timeZone: timezone.name,
+    dateStyle: "full",
+  })}
+  ${new Date().toLocaleTimeString("en-GB", {
+    timeZone: timezone.name,
+    hour: "numeric",
+    minute: "numeric",
+  })}`;
+}
+
+function dailyWeather(data) {
+  let count = new Date().getDay() + 1;
+  for (let index = 0; index < forecastDay.length; index++) {
+    let weekDay = "";
+    forecastTemp[index].textContent = `${Math.floor(
+      data[index].temperatureMax
+    )}`;
+    weekDay = getWeekDays()[count];
+    forecastDay[index].textContent =
+      weekDay.slice(0, 1).toUpperCase() + weekDay.slice(1);
+    count++;
+  }
+}
+
+function getWeekDays() {
+  let weekDays = {};
+  let curDate = new Date();
+  for (let i = 0; i < 7; ++i) {
+    weekDays[curDate.getDay()] = curDate.toLocaleDateString(
+      locales.opencageLocal[currentLocale],
+      {
+        weekday: "long",
+      }
+    );
+    curDate.setDate(curDate.getDate() + 1);
+  }
+
+  return weekDays;
 }
 
 /**Opencage API END */
@@ -172,9 +196,12 @@ btn.addEventListener("click", () => {
   recognition.start();
 });
 
-searchButton.addEventListener("click", addInformationOnPage);
+searchButton.addEventListener("click", () => {
+  getCityInfoByName(searchField.value);
+});
 
 languageSelected.addEventListener("change", () => {
-  currentInfo.currentLocale = languageSelected.value;
+  currentLocale = languageSelected.value;
+  getCityInfoByName(searchField.value == "" ? "Minsk" : searchField.value);
 });
 /**Add Event Listener END */
