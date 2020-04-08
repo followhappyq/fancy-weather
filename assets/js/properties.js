@@ -3,7 +3,6 @@ const properties = {
   opencage: "a7bc7920be7b4e7fa5fefa29178826b4",
 };
 
-let currentLocale = "EN";
 let currentCoordinate = {
   lng: "",
   lat: "",

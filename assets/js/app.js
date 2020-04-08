@@ -69,6 +69,7 @@ const saveRecognitionToInput = (transcript) => {
 /**Weather API START https://darksky.net/dev/docs*/
 
 window.addEventListener("load", () => {
+  localStorage.currentLocale = "EN";
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position) => {
       const cityInfo = {
@@ -85,7 +86,7 @@ window.addEventListener("load", () => {
 
 async function getCityWeather(cityInfo) {
   const proxy = `https://cors-anywhere.herokuapp.com/`;
-  const api = `${proxy}https://api.darksky.net/forecast/a0649363ce478d7e542996beff8f43c7/${cityInfo.lat},${cityInfo.lng}?lang=${currentLocale}`;
+  const api = `${proxy}https://api.darksky.net/forecast/a0649363ce478d7e542996beff8f43c7/${cityInfo.lat},${cityInfo.lng}?lang=${localStorage.currentLocale}`;
   fetch(api)
     .then((response) => {
       return response.json();
@@ -115,7 +116,9 @@ async function getCityWeather(cityInfo) {
 // const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${long}&key=a7bc7920be7b4e7fa5fefa29178826b4&language=PL`;
 
 async function getCityInfoByName(city) {
-  const url = `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${properties.opencage}&language=${locales.opencageLocal[currentLocale]}`;
+  const url = `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${
+    properties.opencage
+  }&language=${locales.opencageLocal[localStorage.currentLocale]}`;
   fetch(url)
     .then((response) => {
       return response.json();
@@ -127,7 +130,11 @@ async function getCityInfoByName(city) {
 }
 
 async function getCityInfoByCoordinate(cityInfo) {
-  const url = `https://api.opencagedata.com/geocode/v1/json?q=${cityInfo.lat}+${cityInfo.lng}&key=${properties.opencage}&language=${locales.opencageLocal[currentLocale]}`;
+  const url = `https://api.opencagedata.com/geocode/v1/json?q=${cityInfo.lat}+${
+    cityInfo.lng
+  }&key=${properties.opencage}&language=${
+    locales.opencageLocal[localStorage.currentLocale]
+  }`;
   fetch(url)
     .then((response) => {
       return response.json();
@@ -146,15 +153,21 @@ function addInformationAboutCity(data) {
   weatherCity.textContent = `${
     city == undefined ? formatted : city + "," + country
   }`;
-  time.textContent = `${new Date().toLocaleDateString("en-GB", {
-    timeZone: timezone.name,
-    dateStyle: "full",
-  })}
-  ${new Date().toLocaleTimeString("en-GB", {
-    timeZone: timezone.name,
-    hour: "numeric",
-    minute: "numeric",
-  })}`;
+  time.textContent = `${new Date().toLocaleDateString(
+    locales.opencageLocal[localStorage.currentLocale],
+    {
+      timeZone: timezone.name,
+      dateStyle: "full",
+    }
+  )}
+  ${new Date().toLocaleTimeString(
+    locales.opencageLocal[localStorage.currentLocale],
+    {
+      timeZone: timezone.name,
+      hour: "numeric",
+      minute: "numeric",
+    }
+  )}`;
 }
 
 function dailyWeather(data) {
@@ -176,7 +189,7 @@ function getWeekDays() {
   let curDate = new Date();
   for (let i = 0; i < 7; ++i) {
     weekDays[curDate.getDay()] = curDate.toLocaleDateString(
-      locales.opencageLocal[currentLocale],
+      locales.opencageLocal[localStorage.currentLocale],
       {
         weekday: "long",
       }
@@ -201,7 +214,7 @@ searchButton.addEventListener("click", () => {
 });
 
 languageSelected.addEventListener("change", () => {
-  currentLocale = languageSelected.value;
+  localStorage.setItem("currentLocale", languageSelected.value);
   getCityInfoByName(searchField.value == "" ? "Minsk" : searchField.value);
 });
 /**Add Event Listener END */
