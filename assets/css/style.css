@@ -3,39 +3,75 @@
   margin: 0;
   box-sizing: border-box;
 }
-html {
-  min-height: 100%;
-  margin: 0px;
-}
+
+html,
 body {
   min-height: 100%;
-  width: 100%;
+}
+
+html {
+  color: white;
+  font-family: "Montserrat", sans-serif;
+}
+
+body {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3)),
     url("../img/background/image.jfif");
-
-  font-family: "Montserrat", sans-serif;
-  color: white;
-}
-/* Header START */
-.header-container {
-  display: flex;
-  flex-direction: row;
-  height: 45px;
-  width: 80%;
-  width: auto;
-  justify-content: space-around;
-  margin-top: 40px;
-  color: white;
-  font-size: 18px;
-  min-width: 450px;
 }
 
-.header-menu {
+@media (min-width: 576px) {
+  html {
+    font-size: 12px;
+  }
+
+  .application {
+    padding: 40px;
+  }
+}
+
+@media (min-width: 992px) {
+  html {
+    font-size: 14px;
+  }
+
+  .application {
+    height: 100vh;
+  }
+}
+
+@media (min-width: 1200px) {
+  html {
+    font-size: 16px;
+  }
+
+  .application {
+    padding: 40px 90px 97px;
+  }
+
+  .grid {
+    grid-template-areas: "menu voice-recognition" "weather-today temperature-description location" "forecast location";
+    grid-template-columns: 1fr 300px;
+  }
+}
+
+.application {
+  min-width: 320px;
+  min-height: 100%;
+  height: 100%;
+  padding: 20px 15px;
+}
+
+.grid {
+  display: grid;
+  max-width: 1200px;
+  height: 100%;
+}
+
+.menu {
   display: flex;
-  width: 60%;
 }
 
 .refresh-background,
@@ -47,16 +83,16 @@ body {
   align-items: center;
   background-color: rgba(174, 181, 185, 0.5);
   border-radius: 5px;
-  margin-left: 10px;
   cursor: pointer;
+  margin-left: 10px;
 }
 
-.header-menu .locales {
-  min-width: 70px;
+.locales {
+  width: 70px;
   font-weight: bold;
 }
 
-.header-menu .locales select {
+.locales select {
   background-color: rgba(174, 181, 185, 0);
   color: white;
   border: 0;
@@ -66,7 +102,7 @@ body {
   outline: 0;
 }
 
-.header-menu .locales select option {
+.locales option {
   background-color: rgb(174, 181, 185);
 }
 
@@ -95,20 +131,28 @@ body {
   border-radius: 5px 0 0 5px;
 }
 
-.voice-recognition {
-  display: flex;
+.refresh-image {
+  width: 20px;
+  height: 20px;
+  fill: white;
+  transition: all 0.5s;
+}
+
+.refresh-image:hover {
+  transform: rotate(180deg);
+}
+
+.disabled {
+  opacity: 0.2;
+  transition: all 0.5s;
+}
+
+.search-field {
   position: relative;
 }
 
-.search-field .talk {
-  background: url(../img/icon/mic.svg) center no-repeat;
-  height: 18px;
-  width: 18px;
-  border: none;
-  position: absolute;
-  left: 60%;
-  top: 30%;
-  cursor: pointer;
+.voice-recognition {
+  display: flex;
 }
 
 .voice-recognition .search {
@@ -140,25 +184,17 @@ body {
   color: white;
 }
 
-.refresh-image {
-  width: 20px;
-  height: 20px;
-  fill: white;
-  transition: all 0.5s;
+.search-field .talk {
+  background: url(../img/icon/mic.svg) center no-repeat;
+  height: 18px;
+  width: 18px;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  right: 2%;
+  top: 28%;
 }
 
-.refresh-image:hover {
-  transform: rotate(180deg);
-}
-
-.disabled {
-  opacity: 0.2;
-  transition: all 0.5s;
-}
-
-/* HEADER END */
-
-/** MAIN START */
 #map {
   top: 0;
   bottom: 0;
@@ -166,4 +202,3 @@ body {
   height: 400px;
   border-radius: 10px;
 }
-/** MAIN END */

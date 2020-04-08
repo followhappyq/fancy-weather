@@ -16,14 +16,16 @@ const searchButton = document.querySelector(".voice-recognition .search");
 /** Weather DOM elements  START*/
 
 const temperatureDegree = document.querySelector(".weather-degree");
-const weatherCity = document.querySelector(".information-container .city");
-const time = document.querySelector(".information-container .time");
-const summaryInfo = document.querySelector(".information-container .summary");
-const feels = document.querySelector(".information-container .feels");
-const wind = document.querySelector(".information-container .wind");
-const humi = document.querySelector(".information-container .humidity");
+const weatherCity = document.querySelector(".city");
+const time = document.querySelector(".time");
+const summaryInfo = document.querySelector(".summary");
+const feels = document.querySelector(".feels");
+const wind = document.querySelector(".wind");
+const humi = document.querySelector(".humidity");
 const forecastTemp = document.querySelectorAll(".forecast-temperature");
 const forecastDay = document.querySelectorAll(".forecast-day");
+const currentlyIcon = document.querySelector(".icon");
+const dailyIcon = document.querySelectorAll(".daily-icon");
 
 /** Weather DOM elements  END*/
 
@@ -99,6 +101,7 @@ async function getCityWeather(cityInfo) {
         windSpeed,
         humidity,
         apparentTemperature,
+        icon,
       } = data.currently;
       const { daily } = data;
       temperatureDegree.textContent = `${Math.floor(temperature)} °F`;
@@ -106,9 +109,35 @@ async function getCityWeather(cityInfo) {
       feels.textContent = `Feels Like: ${Math.floor(apparentTemperature)}`;
       wind.textContent = `Wind speed: ${Math.floor(windSpeed)} km/h`;
       humi.textContent = `Humidity: ${Math.floor(humidity * 100)} %`;
+      selectIcons(icon, currentlyIcon);
       dailyWeather(daily.data);
     });
   currentCoordinate = cityInfo;
+}
+
+function dailyWeather(data) {
+  let count = new Date().getDay() + 1;
+  for (let index = 0; index < forecastDay.length; index++) {
+    let weekDay = "";
+
+    forecastTemp[index].textContent = `${Math.floor(
+      data[index].temperatureMax
+    )}`;
+    weekDay = getWeekDays()[count];
+    forecastDay[index].textContent =
+      weekDay.slice(0, 1).toUpperCase() + weekDay.slice(1);
+
+    selectIcons(data[index].icon, dailyIcon[index]);
+    count++;
+  }
+  console.log(data);
+}
+
+function selectIcons(icon, iconID) {
+  const skycons = new Skycons({ color: "white" });
+  const currentIcon = icon.replace(/-/g, "_").toUpperCase();
+  skycons.play();
+  return skycons.set(iconID, Skycons[currentIcon]);
 }
 
 /** Weather API END */
@@ -142,7 +171,6 @@ async function getCityInfoByCoordinate(cityInfo) {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
       addInformationAboutCity(data);
     });
 }
@@ -151,7 +179,6 @@ function addInformationAboutCity(data) {
   const { timezone } = data.results[0].annotations;
   const { city, country } = data.results[0].components;
   const { formatted } = data.results[0];
-  /**Add data to PAGE */
   weatherCity.textContent = `${
     city == undefined ? formatted : city + "," + country
   }`;
@@ -170,20 +197,6 @@ function addInformationAboutCity(data) {
       minute: "numeric",
     }
   )}`;
-}
-
-function dailyWeather(data) {
-  let count = new Date().getDay() + 1;
-  for (let index = 0; index < forecastDay.length; index++) {
-    let weekDay = "";
-    forecastTemp[index].textContent = `${Math.floor(
-      data[index].temperatureMax
-    )}`;
-    weekDay = getWeekDays()[count];
-    forecastDay[index].textContent =
-      weekDay.slice(0, 1).toUpperCase() + weekDay.slice(1);
-    count++;
-  }
 }
 
 function getWeekDays() {

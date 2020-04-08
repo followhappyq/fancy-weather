@@ -7,15 +7,18 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap"
       rel="stylesheet"
     />
-    
-    <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
+
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="./assets/css/style.css" />
     <title>Fancy Weather</title>
   </head>
   <body>
-    <header>
-      <div class="header-container">
-        <div class="header-menu">
+    <div class="application">
+      <div class="grid">
+        <div class="menu">
           <div class="refresh-background">
             <img src="./assets/img/icon/refresh.svg" class="refresh-image" />
           </div>
@@ -31,7 +34,6 @@
             <div class="temperature celsius disabled">°C</div>
           </div>
         </div>
-
         <div class="voice-recognition">
           <div class="search-field">
             <input
@@ -44,17 +46,15 @@
             />
             <button class="talk" type="button"></button>
           </div>
-
           <div class="search">Search</div>
         </div>
-      </div>
-    </header>
-    <main>
-      <div class="information-container">
-        <div class="city"></div>
-        <div class="time"></div>
-        <div class="temperature">
-          <h2 class="weather-degree"></h2>
+        <div class="weather-today">
+          <div class="city"></div>
+          <div class="time"></div>
+          <div class="temperature">
+            <h2 class="weather-degree"></h2>
+            <canvas class="icon" width="128" height="128"></canvas>
+          </div>
         </div>
         <div class="temperatue-description">
           <div class="summary"></div>
@@ -66,21 +66,26 @@
           <div class="forecast-element">
             <div class="forecast-day"></div>
             <div class="forecast-temperature"></div>
+            <canvas class="daily-icon" width="128" height="128"></canvas>
           </div>
           <div class="forecast-element">
             <div class="forecast-day"></div>
             <div class="forecast-temperature"></div>
-          </div><div class="forecast-element">
+            <canvas class="daily-icon" width="128" height="128"></canvas>
+          </div>
+          <div class="forecast-element">
             <div class="forecast-day"></div>
             <div class="forecast-temperature"></div>
-          </div>
+            <canvas class="daily-icon" width="128" height="128"></canvas>
           </div>
         </div>
-        <div id="map"></div>
+        <div class="location" id="map"></div>
       </div>
-    </main>    
+    </div>
+
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
     <script src="./assets/js/properties.js"></script>
-    <script src="./assets/js/app.js"></script>    
+    <script src="./assets/js/app.js"></script>
+    <script src="./assets/js/skycons.js"></script>
   </body>
 </html>
