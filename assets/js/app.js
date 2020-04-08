@@ -78,6 +78,7 @@ window.addEventListener("load", () => {
       };
       getCityWeather(cityInfo);
       getCityInfoByCoordinate(cityInfo);
+      mapRender(cityInfo);
     });
   } else {
     console.log(1);
@@ -112,8 +113,7 @@ async function getCityWeather(cityInfo) {
 
 /** Weather API END */
 
-/** Opencage API START  https://opencagedata.com/api*/
-// const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${long}&key=a7bc7920be7b4e7fa5fefa29178826b4&language=PL`;
+/** Opencage API START  https://opencagedata.com/api */
 
 async function getCityInfoByName(city) {
   const url = `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${
@@ -124,8 +124,10 @@ async function getCityInfoByName(city) {
       return response.json();
     })
     .then((data) => {
+      const { geometry } = data.results[0];
       addInformationAboutCity(data);
-      getCityWeather(data.results[0].geometry);
+      getCityWeather(geometry);
+      mapRender(geometry);
     });
 }
 
@@ -202,7 +204,18 @@ function getWeekDays() {
 
 /**Opencage API END */
 
-function translateData() {}
+/** Mapbox API START */
+function mapRender(coordinate) {
+  mapboxgl.accessToken = properties.mapbox;
+  var map = new mapboxgl.Map({
+    container: "map", // container id
+    style: "mapbox://styles/mapbox/streets-v11", // stylesheet location
+    center: [coordinate.lng, coordinate.lat], // starting position [lng, lat]
+    zoom: 9, // starting zoom
+  });
+}
+
+/** Mapbox API END */
 
 /**Add Event Listener START */
 btn.addEventListener("click", () => {
