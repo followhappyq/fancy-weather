@@ -20,8 +20,6 @@ body {
   background-position: center;
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3)),
     url("../img/background/image.jfif");
-  display: flex;
-  justify-content: center;
 }
 
 @media (min-width: 320px) {
@@ -70,12 +68,15 @@ body {
   max-width: 1260px;
   height: 100%;
   grid-template-areas: "menu" "voice-recognition" "weather-today" "forecast" "location";
+  grid-template-columns: 1fr;
+  justify-content: center;
+  margin: 0 auto;
 }
 
 @media (min-width: 570px) {
   .grid {
     grid-template-areas: "menu voice-recognition" "weather-today weather-today" "forecast forecast" "location location";
-    grid-template-rows: 30px repeat(auto-fit, auto);
+    grid-template-rows: 44px repeat(auto-fit, auto);
     grid-template-columns: 1fr 1fr;
   }
 }
@@ -227,14 +228,15 @@ body {
 
 .weather-today {
   grid-area: weather-today;
-  justify-self: start;
   margin-top: 40px;
+  justify-self: center;
+  align-self: center;
 }
 
 @media (min-width: 1250px) {
   .weather-today {
     align-self: flex-start;
-    margin-top: 57px;
+    margin-top: 60px;
   }
 }
 
@@ -279,7 +281,8 @@ body {
   grid-area: forecast;
   display: flex;
   margin-top: 40px;
-  justify-content: space-between;
+  justify-self: center;
+  justify-content: space-evenly;
 }
 
 .forecast-day {
