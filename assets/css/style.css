@@ -304,6 +304,10 @@ body {
   margin-top: 40px;
 }
 
+.location-coordinate {
+  font-size: 20px;
+}
+
 @media (min-width: 1250px) {
   .location {
     justify-self: flex-start;
@@ -316,7 +320,14 @@ body {
 #map {
   top: 0;
   bottom: 0;
-  width: 350px;
-  height: 350px;
+  width: 250px;
+  height: 250px;
   border-radius: 10px;
+}
+
+@media (min-width: 570px) {
+  #map {
+    width: 350px;
+    height: 350px;
+  }
 }
