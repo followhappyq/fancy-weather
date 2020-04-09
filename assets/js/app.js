@@ -91,29 +91,27 @@ window.addEventListener("load", () => {
 
 async function getCityWeather(cityInfo) {
   const proxy = `https://cors-anywhere.herokuapp.com/`;
-  const api = `${proxy}https://api.darksky.net/forecast/a0649363ce478d7e542996beff8f43c7/${cityInfo.lat},${cityInfo.lng}?lang=${localStorage.currentLocale}`;
-  fetch(api)
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      const {
-        temperature,
-        summary,
-        windSpeed,
-        humidity,
-        apparentTemperature,
-        icon,
-      } = data.currently;
-      const { daily } = data;
-      temperatureDegree.textContent = `${Math.floor(temperature)}`;
-      summaryInfo.textContent = summary;
-      feels.textContent = `Feels Like: ${Math.floor(apparentTemperature)}`;
-      wind.textContent = `Wind speed: ${Math.floor(windSpeed)} km/h`;
-      humi.textContent = `Humidity: ${Math.floor(humidity * 100)} %`;
-      selectIcons(icon, currentlyIcon);
-      dailyWeather(daily.data);
-    });
+  const url = `${proxy}https://api.darksky.net/forecast/a0649363ce478d7e542996beff8f43c7/${cityInfo.lat},${cityInfo.lng}?lang=${localStorage.currentLocale}`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+  console.log(data);
+  const {
+    temperature,
+    summary,
+    windSpeed,
+    humidity,
+    apparentTemperature,
+    icon,
+  } = data.currently;
+  const { daily } = data;
+  temperatureDegree.textContent = `${Math.floor(temperature)}`;
+  summaryInfo.textContent = summary;
+  feels.textContent = `Feels Like: ${Math.floor(apparentTemperature)}`;
+  wind.textContent = `Wind speed: ${Math.floor(windSpeed)} km/h`;
+  humi.textContent = `Humidity: ${Math.floor(humidity * 100)} %`;
+  selectIcons(icon, currentlyIcon);
+  dailyWeather(daily.data);
   currentCoordinate = cityInfo;
 }
 
@@ -148,16 +146,14 @@ async function getCityInfoByName(city) {
   const url = `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${
     properties.opencage
   }&language=${locales.opencageLocal[localStorage.currentLocale]}`;
-  fetch(url)
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      const { geometry } = data.results[0];
-      addInformationAboutCity(data);
-      getCityWeather(geometry);
-      mapRender(geometry);
-    });
+
+  const res = await fetch(url);
+  const data = await res.json();
+
+  const { geometry } = data.results[0];
+  addInformationAboutCity(data);
+  getCityWeather(geometry);
+  mapRender(geometry);
 }
 
 async function getCityInfoByCoordinate(cityInfo) {
@@ -166,13 +162,9 @@ async function getCityInfoByCoordinate(cityInfo) {
   }&key=${properties.opencage}&language=${
     locales.opencageLocal[localStorage.currentLocale]
   }`;
-  fetch(url)
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      addInformationAboutCity(data);
-    });
+  const response = await fetch(url);
+  const data = await response.json();
+  addInformationAboutCity(data);
 }
 
 function addInformationAboutCity(data) {
