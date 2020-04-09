@@ -26,6 +26,8 @@ const forecastTemp = document.querySelectorAll(".forecast-temperature");
 const forecastDay = document.querySelectorAll(".forecast-day");
 const currentlyIcon = document.querySelector(".icon");
 const dailyIcon = document.querySelectorAll(".daily-icon");
+const locationLatitude = document.querySelector(".location-lat");
+const locationLongitude = document.querySelector(".location-long");
 
 /** Weather DOM elements  END*/
 
@@ -104,7 +106,7 @@ async function getCityWeather(cityInfo) {
         icon,
       } = data.currently;
       const { daily } = data;
-      temperatureDegree.textContent = `${Math.floor(temperature)} °F`;
+      temperatureDegree.textContent = `${Math.floor(temperature)}`;
       summaryInfo.textContent = summary;
       feels.textContent = `Feels Like: ${Math.floor(apparentTemperature)}`;
       wind.textContent = `Wind speed: ${Math.floor(windSpeed)} km/h`;
@@ -119,18 +121,16 @@ function dailyWeather(data) {
   let count = new Date().getDay() + 1;
   for (let index = 0; index < forecastDay.length; index++) {
     let weekDay = "";
-
     forecastTemp[index].textContent = `${Math.floor(
       data[index].temperatureMax
-    )}`;
+    )}°`;
     weekDay = getWeekDays()[count];
     forecastDay[index].textContent =
       weekDay.slice(0, 1).toUpperCase() + weekDay.slice(1);
 
     selectIcons(data[index].icon, dailyIcon[index]);
-    count++;
+    count === 6 ? (count = 0) : count++;
   }
-  console.log(data);
 }
 
 function selectIcons(icon, iconID) {
@@ -220,12 +220,18 @@ function getWeekDays() {
 /** Mapbox API START */
 function mapRender(coordinate) {
   mapboxgl.accessToken = properties.mapbox;
-  var map = new mapboxgl.Map({
+  let map = new mapboxgl.Map({
     container: "map", // container id
     style: "mapbox://styles/mapbox/streets-v11", // stylesheet location
     center: [coordinate.lng, coordinate.lat], // starting position [lng, lat]
     zoom: 9, // starting zoom
   });
+  locationLatitude.textContent = `${coordinate.lat
+    .toString()
+    .slice(0, 2)}°${coordinate.lat.toString().slice(3, 5)}`;
+  locationLongitude.textContent = `${coordinate.lng
+    .toString()
+    .slice(0, 2)}°${coordinate.lng.toString().slice(3, 5)}`;
 }
 
 /** Mapbox API END */

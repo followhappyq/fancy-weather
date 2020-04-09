@@ -53,33 +53,47 @@
           <div class="time"></div>
           <div class="temperature">
             <h2 class="weather-degree"></h2>
-            <canvas class="icon" width="128" height="128"></canvas>
+            <div class="today-info">
+              <canvas class="icon" width="128" height="128"></canvas>
+              <div class="today-content">
+                <div class="summary"></div>
+                <div class="feels"></div>
+                <div class="wind"></div>
+                <div class="humidity"></div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="temperatue-description">
-          <div class="summary"></div>
-          <div class="feels"></div>
-          <div class="wind"></div>
-          <div class="humidity"></div>
+        <div class="location">
+          <div id="map"></div>
+          <div class="location-coordinate">
+            <div class="location-lat"></div>
+            <div class="location-long"></div>
+          </div>
         </div>
         <div class="forecast">
           <div class="forecast-element">
             <div class="forecast-day"></div>
-            <div class="forecast-temperature"></div>
-            <canvas class="daily-icon" width="128" height="128"></canvas>
+            <div class="forecast-info">
+              <div class="forecast-temperature"></div>
+              <canvas class="daily-icon" width="96" height="96"></canvas>
+            </div>
           </div>
           <div class="forecast-element">
             <div class="forecast-day"></div>
-            <div class="forecast-temperature"></div>
-            <canvas class="daily-icon" width="128" height="128"></canvas>
+            <div class="forecast-info">
+              <div class="forecast-temperature"></div>
+              <canvas class="daily-icon" width="96" height="96"></canvas>
+            </div>
           </div>
           <div class="forecast-element">
             <div class="forecast-day"></div>
-            <div class="forecast-temperature"></div>
-            <canvas class="daily-icon" width="128" height="128"></canvas>
+            <div class="forecast-info">
+              <div class="forecast-temperature"></div>
+              <canvas class="daily-icon" width="96" height="96"></canvas>
+            </div>
           </div>
         </div>
-        <div class="location" id="map"></div>
       </div>
     </div>
 
