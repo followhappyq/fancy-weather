@@ -2,6 +2,8 @@
 const body = document.querySelector("body");
 const backgroundImage = document.querySelector(".refresh-image");
 const languageSelected = document.querySelector(".locales select");
+const fahrenheit = document.querySelector(".fahrenheit");
+const celsius = document.querySelector(".celsius");
 
 /** Voice recognition DOM elements START*/
 const btn = document.querySelector(".voice-recognition .talk");
@@ -19,7 +21,6 @@ const temperatureDegree = document.querySelector(".weather-degree");
 const weatherCity = document.querySelector(".city");
 const time = document.querySelector(".time");
 const summaryInfo = document.querySelector(".summary");
-const feels = document.querySelector(".feels");
 const wind = document.querySelector(".wind");
 const humi = document.querySelector(".humidity");
 const forecastTemp = document.querySelectorAll(".forecast-temperature");
@@ -95,19 +96,10 @@ async function getCityWeather(cityInfo) {
 
   const response = await fetch(url);
   const data = await response.json();
-  console.log(data);
-  const {
-    temperature,
-    summary,
-    windSpeed,
-    humidity,
-    apparentTemperature,
-    icon,
-  } = data.currently;
+  const { temperature, summary, windSpeed, humidity, icon } = data.currently;
   const { daily } = data;
   temperatureDegree.textContent = `${Math.floor(temperature)}`;
   summaryInfo.textContent = summary;
-  feels.textContent = `Feels Like: ${Math.floor(apparentTemperature)}`;
   wind.textContent = `Wind speed: ${Math.floor(windSpeed)} km/h`;
   humi.textContent = `Humidity: ${Math.floor(humidity * 100)} %`;
   selectIcons(icon, currentlyIcon);
@@ -136,6 +128,35 @@ function selectIcons(icon, iconID) {
   const currentIcon = icon.replace(/-/g, "_").toUpperCase();
   skycons.play();
   return skycons.set(iconID, Skycons[currentIcon]);
+}
+
+function convertTemperature() {
+  if (celsius.classList.contains("disabled")) {
+    celsius.classList.remove("disabled");
+    fahrenheit.classList.add("disabled");
+    localStorage.setItem("today", temperatureDegree.textContent);
+    for (let index = 0; index < forecastTemp.length; index++) {
+      localStorage.setItem(`daily${index}`, forecastTemp[index].textContent);
+      formula(forecastTemp[index]);
+    }
+
+    temperatureDegree.textContent = Math.floor(
+      ((+temperatureDegree.textContent - 32) * 5) / 9
+    );
+  } else {
+    fahrenheit.classList.remove("disabled");
+    celsius.classList.add("disabled");
+    for (let index = 0; index < forecastTemp.length; index++) {
+      forecastTemp[index].textContent = localStorage.getItem(`daily${index}`);
+    }
+    temperatureDegree.textContent = localStorage.getItem("today");
+  }
+}
+
+function formula(element) {
+  element.textContent = `${Math.floor(
+    ((+element.textContent.slice(0, -1) - 32) * 5) / 9
+  )}°`;
 }
 
 /** Weather API END */
@@ -241,4 +262,8 @@ languageSelected.addEventListener("change", () => {
   localStorage.setItem("currentLocale", languageSelected.value);
   getCityInfoByName(searchField.value == "" ? "Minsk" : searchField.value);
 });
+
+fahrenheit.addEventListener("click", convertTemperature);
+celsius.addEventListener("click", convertTemperature);
+
 /**Add Event Listener END */
